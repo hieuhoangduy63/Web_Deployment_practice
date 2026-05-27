@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý người dùng</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #f4f7fb;
@@ -30,7 +33,7 @@
             min-height: 100vh;
             margin: 0;
             color: var(--text);
-            font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: "Be Vietnam Pro", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background:
                 radial-gradient(circle at top left, rgba(37, 99, 235, 0.12), transparent 34rem),
                 linear-gradient(135deg, #f8fafc 0%, var(--bg) 100%);
@@ -59,44 +62,16 @@
 
         .topbar {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             justify-content: space-between;
             gap: 16px;
-            margin-bottom: 22px;
+            margin-bottom: 18px;
         }
 
         h1 {
             margin: 0;
             font-size: clamp(28px, 4vw, 42px);
             line-height: 1.1;
-        }
-
-        .subtitle {
-            max-width: 640px;
-            margin: 10px 0 0;
-            color: var(--muted);
-            line-height: 1.55;
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            min-height: 36px;
-            padding: 8px 12px;
-            border: 1px solid rgba(4, 120, 87, 0.18);
-            border-radius: 999px;
-            color: var(--success);
-            background: #ecfdf5;
-            font-weight: 700;
-            white-space: nowrap;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--success);
         }
 
         .summary-grid {
@@ -226,7 +201,7 @@
 
         table {
             width: 100%;
-            min-width: 720px;
+            min-width: 860px;
             border-collapse: collapse;
             table-layout: fixed;
         }
@@ -237,7 +212,9 @@
             border-bottom: 1px solid var(--line);
             text-align: left;
             vertical-align: middle;
-            overflow-wrap: anywhere;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         th:nth-child(1),
@@ -257,18 +234,20 @@
 
         th:nth-child(5),
         td:nth-child(5) {
-            width: 150px;
+            width: 180px;
         }
 
         th {
             color: #475467;
             background: var(--surface-soft);
-            font-size: 12px;
-            font-weight: 800;
-            text-transform: uppercase;
+            height: 58px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: none;
         }
 
         td {
+            height: 64px;
             color: #263347;
             font-size: 14px;
         }
@@ -278,7 +257,7 @@
         }
 
         .user-name {
-            font-weight: 800;
+            font-weight: 700;
         }
 
         .id-pill {
@@ -294,10 +273,11 @@
         }
 
         .actions {
-            display: flex;
+            display: inline-flex;
             gap: 8px;
             flex-wrap: nowrap;
             align-items: center;
+            white-space: nowrap;
         }
 
         .btn-edit,
@@ -307,7 +287,8 @@
             border-radius: var(--radius);
             padding: 7px 11px;
             font-size: 13px;
-            font-weight: 800;
+            font-weight: 700;
+            min-width: 58px;
             white-space: nowrap;
         }
 
@@ -355,7 +336,7 @@
         }
 
         .placeholder-row td {
-            height: 78px;
+            height: 64px;
             color: transparent;
             user-select: none;
         }
@@ -372,9 +353,6 @@
                 grid-template-columns: 1fr;
             }
 
-            .status-badge {
-                width: fit-content;
-            }
         }
 
         @media (max-width: 560px) {
@@ -408,11 +386,6 @@
         <section class="topbar">
             <div>
                 <h1>Quản lý người dùng</h1>
-                <p class="subtitle">Ứng dụng frontend chạy trên Firebase Hosting và lấy dữ liệu từ backend Render.</p>
-            </div>
-            <div class="status-badge">
-                <span class="status-dot"></span>
-                Backend Render
             </div>
         </section>
 
