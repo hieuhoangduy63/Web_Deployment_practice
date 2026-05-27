@@ -30,7 +30,7 @@
             min-height: 100vh;
             margin: 0;
             color: var(--text);
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background:
                 radial-gradient(circle at top left, rgba(37, 99, 235, 0.12), transparent 34rem),
                 linear-gradient(135deg, #f8fafc 0%, var(--bg) 100%);
@@ -63,15 +63,6 @@
             justify-content: space-between;
             gap: 16px;
             margin-bottom: 22px;
-        }
-
-        .eyebrow {
-            margin: 0 0 6px;
-            color: var(--primary);
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 0;
-            text-transform: uppercase;
         }
 
         h1 {
@@ -237,6 +228,7 @@
             width: 100%;
             min-width: 720px;
             border-collapse: collapse;
+            table-layout: fixed;
         }
 
         th,
@@ -245,6 +237,27 @@
             border-bottom: 1px solid var(--line);
             text-align: left;
             vertical-align: middle;
+            overflow-wrap: anywhere;
+        }
+
+        th:nth-child(1),
+        td:nth-child(1) {
+            width: 86px;
+        }
+
+        th:nth-child(2),
+        td:nth-child(2) {
+            width: 28%;
+        }
+
+        th:nth-child(4),
+        td:nth-child(4) {
+            width: 22%;
+        }
+
+        th:nth-child(5),
+        td:nth-child(5) {
+            width: 150px;
         }
 
         th {
@@ -283,7 +296,8 @@
         .actions {
             display: flex;
             gap: 8px;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
+            align-items: center;
         }
 
         .btn-edit,
@@ -294,6 +308,7 @@
             padding: 7px 11px;
             font-size: 13px;
             font-weight: 800;
+            white-space: nowrap;
         }
 
         .btn-edit {
@@ -337,6 +352,12 @@
 
         .empty-state.is-visible {
             display: block;
+        }
+
+        .placeholder-row td {
+            height: 78px;
+            color: transparent;
+            user-select: none;
         }
 
         @media (max-width: 860px) {
@@ -386,7 +407,6 @@
     <main class="app">
         <section class="topbar">
             <div>
-                <p class="eyebrow">EX3 Deployment</p>
                 <h1>Quản lý người dùng</h1>
                 <p class="subtitle">Ứng dụng frontend chạy trên Firebase Hosting và lấy dữ liệu từ backend Render.</p>
             </div>
@@ -536,6 +556,13 @@
                 `;
                 tbody.appendChild(tr);
             });
+
+            for (let i = paginatedUsers.length; i < rowsPerPage && filteredUsers.length > 0; i++) {
+                const tr = document.createElement('tr');
+                tr.className = 'placeholder-row';
+                tr.innerHTML = '<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>';
+                tbody.appendChild(tr);
+            }
 
             emptyState.classList.toggle('is-visible', filteredUsers.length === 0);
             userCount.innerText = users.length;
