@@ -1,127 +1,516 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bài tập Quản lý người dùng</title>
+    <title>Quản lý người dùng</title>
     <style>
+        :root {
+            --bg: #f4f7fb;
+            --surface: #ffffff;
+            --surface-soft: #eef4ff;
+            --text: #182033;
+            --muted: #667085;
+            --line: #d9e2ef;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --danger: #dc2626;
+            --danger-soft: #fee2e2;
+            --success: #047857;
+            --shadow: 0 18px 45px rgba(15, 23, 42, 0.09);
+            --radius: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: sans-serif;
-            margin: 20px;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(37, 99, 235, 0.12), transparent 34rem),
+                linear-gradient(135deg, #f8fafc 0%, var(--bg) 100%);
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        button {
+            border: 0;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        .app {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 28px 0 40px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+
+        .eyebrow {
+            margin: 0 0 6px;
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(28px, 4vw, 42px);
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            max-width: 640px;
+            margin: 10px 0 0;
+            color: var(--muted);
+            line-height: 1.55;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 36px;
+            padding: 8px 12px;
+            border: 1px solid rgba(4, 120, 87, 0.18);
+            border-radius: 999px;
+            color: var(--success);
+            background: #ecfdf5;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .metric {
+            padding: 18px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, 0.86);
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+        }
+
+        .metric-label {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .metric-value {
+            margin: 7px 0 0;
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 360px minmax(0, 1fr);
+            gap: 18px;
+            align-items: start;
+        }
+
+        .panel {
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--surface);
+            box-shadow: var(--shadow);
+        }
+
+        .panel-header {
+            padding: 18px 18px 0;
+        }
+
+        .panel-title {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .panel-note {
+            margin: 7px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.45;
+        }
+
+        form {
+            display: grid;
+            gap: 12px;
+            padding: 18px;
+        }
+
+        .field {
+            display: grid;
+            gap: 7px;
+        }
+
+        label {
+            color: #344054;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        input {
+            width: 100%;
+            min-height: 42px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 10px 12px;
+            color: var(--text);
+            background: #fbfdff;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+        }
+
+        .btn-primary {
+            min-height: 42px;
+            border-radius: var(--radius);
+            color: #ffffff;
+            background: var(--primary);
+            font-weight: 800;
+            box-shadow: 0 12px 20px rgba(37, 99, 235, 0.22);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .table-panel {
+            overflow: hidden;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 16px 18px;
+            border-bottom: 1px solid var(--line);
+            background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+        }
+
+        .search-box {
+            width: min(360px, 100%);
+        }
+
+        .table-wrap {
+            overflow-x: auto;
         }
 
         table {
             width: 100%;
+            min-width: 720px;
             border-collapse: collapse;
-            margin-top: 15px;
         }
 
         th,
         td {
-            border: 1px solid #aaa;
-            padding: 8px;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--line);
             text-align: left;
+            vertical-align: middle;
         }
 
         th {
-            background-color: #eee;
+            color: #475467;
+            background: var(--surface-soft);
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
         }
 
-        form {
-            border: 1px solid #ccc;
-            padding: 15px;
-            width: max-content;
-            margin-bottom: 20px;
+        td {
+            color: #263347;
+            font-size: 14px;
         }
 
-        input,
-        button {
-            padding: 5px;
-            margin: 5px 5px 5px 0;
+        tbody tr:hover {
+            background: #f8fbff;
+        }
+
+        .user-name {
+            font-weight: 800;
+        }
+
+        .id-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 34px;
+            min-height: 28px;
+            border-radius: 999px;
+            color: var(--primary);
+            background: #dbeafe;
+            font-weight: 800;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-edit,
+        .btn-delete,
+        .btn-page {
+            min-height: 34px;
+            border-radius: var(--radius);
+            padding: 7px 11px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .btn-edit {
+            color: #1d4ed8;
+            background: #dbeafe;
+        }
+
+        .btn-delete {
+            color: var(--danger);
+            background: var(--danger-soft);
         }
 
         .pagination {
-            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 14px 18px;
+            background: #fbfdff;
+        }
+
+        .btn-page {
+            color: #344054;
+            background: #eef2f7;
+        }
+
+        #pageInfo {
+            min-width: 94px;
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .empty-state {
+            display: none;
+            padding: 26px 18px;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .empty-state.is-visible {
+            display: block;
+        }
+
+        @media (max-width: 860px) {
+            .topbar,
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .summary-grid,
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .status-badge {
+                width: fit-content;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .app {
+                width: min(100% - 20px, 1180px);
+                padding-top: 18px;
+            }
+
+            .summary-grid {
+                gap: 10px;
+            }
+
+            .metric,
+            form,
+            .panel-header,
+            .toolbar,
+            .pagination {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+
+            .pagination {
+                justify-content: space-between;
+            }
         }
     </style>
 </head>
 
 <body>
-    <h2>Quản lý người dùng </h2>
+    <main class="app">
+        <section class="topbar">
+            <div>
+                <p class="eyebrow">EX3 Deployment</p>
+                <h1>Quản lý người dùng</h1>
+                <p class="subtitle">Ứng dụng frontend chạy trên Firebase Hosting và lấy dữ liệu từ backend Render.</p>
+            </div>
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                Backend Render
+            </div>
+        </section>
 
-    <!-- Thanh tìm kiếm -->
-    <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Tìm kiếm theo tên...">
-    </div>
+        <section class="summary-grid">
+            <div class="metric">
+                <p class="metric-label">Tổng người dùng</p>
+                <p class="metric-value" id="userCount">0</p>
+            </div>
+            <div class="metric">
+                <p class="metric-label">Số dòng mỗi trang</p>
+                <p class="metric-value">5</p>
+            </div>
+            <div class="metric">
+                <p class="metric-label">Trạng thái</p>
+                <p class="metric-value">CRUD</p>
+            </div>
+        </section>
 
-    <!-- Form thêm người dùng -->
-    <form id="addForm">
-        <h3>Thêm người dùng</h3>
-        <input type="text" id="nameInput" placeholder="Họ và tên" required>
-        <input type="email" id="emailInput" placeholder="Email" required>
-        <input type="text" id="phoneInput" placeholder="Số điện thoại" required>
-        <button type="submit" class="btn-add">Thêm mới</button>
-    </form>
+        <section class="layout">
+            <aside class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Thêm người dùng</h2>
+                    <p class="panel-note">Nhập đủ thông tin để tạo một người dùng mới trong danh sách.</p>
+                </div>
 
-    <!-- Bảng hiển thị -->
-    <table id="usersTable">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Tên</th>
-                <th>Email</th>
-                <th>Số điện thoại</th>
-                <th>Thao tác</th>
-            </tr>
-        </thead>
-        <tbody id="usersBody">
-            <!-- Dữ liệu JS chèn vào -->
-        </tbody>
-    </table>
+                <form id="addForm">
+                    <div class="field">
+                        <label for="nameInput">Họ và tên</label>
+                        <input type="text" id="nameInput" placeholder="Nguyễn Văn A" required>
+                    </div>
 
-    <!-- Phân trang -->
-    <div class="pagination">
-        <button onclick="prevPage()">Trang trước</button>
-        <span id="pageInfo">Trang 1 / 1</span>
-        <button onclick="nextPage()">Trang sau</button>
-    </div>
+                    <div class="field">
+                        <label for="emailInput">Email</label>
+                        <input type="email" id="emailInput" placeholder="email@example.com" required>
+                    </div>
 
-    <!-- TOÀN BỘ JAVASCRIPT ĐƯỢC CHÈN CHUNG VÀO ĐÂY -->
+                    <div class="field">
+                        <label for="phoneInput">Số điện thoại</label>
+                        <input type="text" id="phoneInput" placeholder="0901234567" required>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Thêm mới</button>
+                </form>
+            </aside>
+
+            <section class="panel table-panel">
+                <div class="toolbar">
+                    <div>
+                        <h2 class="panel-title">Danh sách người dùng</h2>
+                        <p class="panel-note">Tìm kiếm, chỉnh sửa hoặc xóa người dùng.</p>
+                    </div>
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Tìm kiếm theo tên...">
+                    </div>
+                </div>
+
+                <div class="table-wrap">
+                    <table id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tên</th>
+                                <th>Email</th>
+                                <th>Số điện thoại</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="empty-state" id="emptyState">Không tìm thấy người dùng phù hợp.</div>
+
+                <div class="pagination">
+                    <button class="btn-page" onclick="prevPage()">Trang trước</button>
+                    <span id="pageInfo">Trang 1 / 1</span>
+                    <button class="btn-page" onclick="nextPage()">Trang sau</button>
+                </div>
+            </section>
+        </section>
+    </main>
+
     <script>
-        const API_URL = 'http://localhost:3000/users';
+        const API_URL = 'https://web-deployment-practice.onrender.com/users';
         let users = [];
-
-        // Các biến để làm phân trang
         let currentPage = 1;
         const rowsPerPage = 5;
 
-        // Khởi chạy khi load trang
         document.addEventListener('DOMContentLoaded', fetchUsers);
 
-        // READ: Lấy danh sách user từ API
         async function fetchUsers() {
             try {
                 const response = await fetch(API_URL);
+
+                if (!response.ok) {
+                    throw new Error('Không thể tải dữ liệu người dùng');
+                }
+
                 users = await response.json();
                 renderTable();
             } catch (error) {
                 console.error('Lỗi khi lấy dữ liệu:', error);
+                alert('Không thể kết nối backend. Hãy kiểm tra lại link Render.');
             }
         }
 
-        // Hàm vẽ dữ liệu ra bảng HTML (đã kết hợp logic phân trang)
+        function getFilteredUsers() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase();
+            return users.filter(user => user.name.toLowerCase().includes(keyword));
+        }
+
         function renderTable() {
             const tbody = document.getElementById('usersBody');
+            const emptyState = document.getElementById('emptyState');
+            const userCount = document.getElementById('userCount');
             tbody.innerHTML = '';
 
-            // 1. Lọc theo tên (Tìm kiếm) trước khi phân trang
-            const keyword = document.getElementById('searchInput').value.toLowerCase();
-            const filteredUsers = users.filter(user =>
-                user.name.toLowerCase().includes(keyword)
-            );
-
-            // 2. Tính toán phân trang
+            const filteredUsers = getFilteredUsers();
             const totalPages = Math.ceil(filteredUsers.length / rowsPerPage);
 
             if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
@@ -131,27 +520,28 @@
             const end = start + rowsPerPage;
             const paginatedUsers = filteredUsers.slice(start, end);
 
-            // 3. Vẽ ra bảng
             paginatedUsers.forEach(user => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${user.id}</td>
-                    <td><strong>${user.name}</strong></td>
+                    <td><span class="id-pill">${user.id}</span></td>
+                    <td class="user-name">${user.name}</td>
                     <td>${user.email}</td>
                     <td>${user.phone}</td>
                     <td>
-                        <button class="btn-edit" onclick="editUser(${user.id})">Sửa</button>
-                        <button class="btn-delete" onclick="deleteUser(${user.id})">Xóa</button>
+                        <div class="actions">
+                            <button class="btn-edit" onclick="editUser(${user.id})">Sửa</button>
+                            <button class="btn-delete" onclick="deleteUser(${user.id})">Xóa</button>
+                        </div>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
 
-            // 4. Cập nhật chữ "Trang X / Y"
+            emptyState.classList.toggle('is-visible', filteredUsers.length === 0);
+            userCount.innerText = users.length;
             document.getElementById('pageInfo').innerText = `Trang ${totalPages === 0 ? 0 : currentPage} / ${totalPages}`;
         }
 
-        // Phân trang: Nút lùi
         function prevPage() {
             if (currentPage > 1) {
                 currentPage--;
@@ -159,11 +549,8 @@
             }
         }
 
-        // Phân trang: Nút tiến
         function nextPage() {
-            const keyword = document.getElementById('searchInput').value.toLowerCase();
-            const filteredUsers = users.filter(user => user.name.toLowerCase().includes(keyword));
-            const totalPages = Math.ceil(filteredUsers.length / rowsPerPage);
+            const totalPages = Math.ceil(getFilteredUsers().length / rowsPerPage);
 
             if (currentPage < totalPages) {
                 currentPage++;
@@ -171,7 +558,6 @@
             }
         }
 
-        // CREATE: Thêm user mới
         document.getElementById('addForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -188,12 +574,11 @@
                     body: JSON.stringify(newUser)
                 });
 
-                const createdUser = await response.json();
-
-                if (createdUser.id === 11) {
-                    createdUser.id = Math.floor(Math.random() * 1000) + 11;
+                if (!response.ok) {
+                    throw new Error('Không thể thêm người dùng');
                 }
 
+                const createdUser = await response.json();
                 users.push(createdUser);
                 renderTable();
 
@@ -201,10 +586,10 @@
                 alert('Thêm thành công!');
             } catch (error) {
                 console.error('Lỗi thêm dữ liệu:', error);
+                alert('Thêm thất bại. Hãy thử lại.');
             }
         });
 
-        // UPDATE: Sửa user
         async function editUser(id) {
             const userToEdit = users.find(u => u.id === id);
             if (!userToEdit) return;
@@ -218,38 +603,46 @@
             const updatedData = { name: newName, email: newEmail, phone: newPhone };
 
             try {
-                await fetch(`${API_URL}/${id}`, {
+                const response = await fetch(`${API_URL}/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-type': 'application/json' },
                     body: JSON.stringify(updatedData)
                 });
+
+                if (!response.ok) {
+                    throw new Error('Không thể sửa người dùng');
+                }
 
                 users = users.map(user => user.id === id ? { ...user, ...updatedData } : user);
                 renderTable();
                 alert('Sửa thành công!');
             } catch (error) {
                 console.error('Lỗi khi sửa dữ liệu:', error);
+                alert('Sửa thất bại. Hãy thử lại.');
             }
         }
 
-        // DELETE: Xóa user
         async function deleteUser(id) {
             if (!confirm('Bạn có chắc chắn muốn xóa?')) return;
 
             try {
-                await fetch(`${API_URL}/${id}`, {
+                const response = await fetch(`${API_URL}/${id}`, {
                     method: 'DELETE'
                 });
+
+                if (!response.ok) {
+                    throw new Error('Không thể xóa người dùng');
+                }
 
                 users = users.filter(user => user.id !== id);
                 renderTable();
                 alert('Xóa thành công!');
             } catch (error) {
                 console.error('Lỗi khi xóa dữ liệu:', error);
+                alert('Xóa thất bại. Hãy thử lại.');
             }
         }
 
-        // SEARCH: Tìm kiếm theo tên
         document.getElementById('searchInput').addEventListener('input', () => {
             currentPage = 1;
             renderTable();
